@@ -1,82 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send PHPMailer</title>
-
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <form id="myForm" class="card">
-        <div class="msg"></div>
-
-        <h2>Contact us</h2>
-
-        <div class="form-control">
-            <p>Name</p>
-            <input type="text" id="name" class="txt" placeholder="insert name">
-        </div>
-
-        <div class="form-control">
-            <p>Email</p>
-            <input type="text" id="email" class="txt" placeholder="insert email">
-        </div>
-
-        <div class="form-control">
-            <p>Header</p>
-            <input type="text" id="header" class="txt" placeholder="insert header">
-        </div>
-
-        <div class="form-control">
-            <p>Detail</p>
-            <textarea id="detail" class="txt txtarea" placeholder="insert detail"></textarea>
-        </div>
-
-        <button type="button" onclick="sendEmail()" value="Send an email" class="btn-submit">Send</button>
-    </form>
-    
-
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        function sendEmail() {
-            var name = $("#name");
-            var email = $("#email");
-            var header = $("#header");
-            var detail = $("#detail");
-
-            if(isNotEmpty(name) && isNotEmpty(email) && isNotEmpty(header) && isNotEmpty(detail)) {
-                $.ajax({
-                    url: 'sendEmail.php',
-                    method: 'POST',
-                    dataType: 'json',
-                    data: {
-                        name: name.val(),
-                        email: email.val(),
-                        header: header.val(),
-                        detail: detail.val()
-                    }, success: function (response) {
-                        $('#myForm')[0].reset();
-                        $('.msg').text("Message send successfully");
-                    }
-                });
-            }
-        }
-
-        function isNotEmpty(caller) {
-            if(caller.val() == "") {
-                caller.css('border', '1px solid red');
-                return false;
-            }
-            else caller.css('border', '');
-
-            return true;
-        }
-
-
-
-    </script>
-</body>
-</html>
+<?php
+$to = 'khajonsak.wo61@snru.ac.th';
+$subject = 'Marriage Proposal';
+$from = 'khajonsak.pok@email.com';
+ 
+// To send HTML mail, the Content-type header must be set
+$headers  = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+ 
+// Create email headers
+$headers .= 'From: '.$user_email."\r\n".
+    'Reply-To: '.$user_email."\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+ 
+// Compose a simple HTML email message
+$message = '<html><body>';
+$message .= '<h1 style="color:#f40;">Hi Jane!</h1>';
+$message .= '<p style="color:#080;font-size:18px;">Will you marry me?</p>';
+$message .= '</body></html>';
+ 
+// Sending email
+if(mail($to, $subject, $message, $headers)){
+    echo 'Your mail has been sent successfully.';
+} else{
+    echo 'Unable to send email. Please try again.';
+}
